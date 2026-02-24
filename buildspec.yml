@@ -5,12 +5,12 @@ env:
     LAMBDA_FUNCTION_NAME: MyDotNetLambda
     ARTIFACT_BUCKET: my-dotnet-lambda-artifacts
     AWS_REGION: us-east-1
-    ASSUME_ROLE_ARN: arn:aws:iam::<ACCOUNT_ID>:role/CodeBuildDeployRole
+    ASSUME_ROLE_ARN: arn:aws:iam::758742552347:role/CodeBuildDeployRole
 
 phases:
   install:
     runtime-versions:
-      dotnet: 6
+      dotnet: 8
     commands:
       - echo "Installing .NET 8 SDK manually"
       # Download the .NET 8 SDK (Linux x64 tar.gz)
