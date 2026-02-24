@@ -14,7 +14,7 @@ phases:
     commands:
       - echo "Installing .NET 8 SDK manually"
       # Download the .NET 8 SDK (Linux x64 tar.gz)
-      - wget https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-8.0.408-linux-x64-binaries -O dotnet8.tar.gz
+      - wget https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.418/dotnet-sdk-8.0.418-linux-x64.tar.gz -O dotnet8.tar.gz
       - mkdir -p /usr/share/dotnet
       - tar -xzf dotnet8.tar.gz -C /usr/share/dotnet
       - export DOTNET_ROOT=/usr/share/dotnet
