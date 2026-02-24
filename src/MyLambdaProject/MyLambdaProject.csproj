@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- AWS Lambda Coreffff -->
+    <!-- AWS Lambda Corefffffff -->
     <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
     <!-- Optional JSON serializer -->
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.2.0" />
