@@ -9,16 +9,13 @@ env:
 
 phases:
   install:
-    runtime-versions:
-      dotnet: 8
     commands:
       - echo "Installing .NET 8 SDK manually"
-      # Download the .NET 8 SDK (Linux x64 tar.gz)
       - wget https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.418/dotnet-sdk-8.0.418-linux-x64.tar.gz -O dotnet8.tar.gz
       - mkdir -p /usr/share/dotnet
       - tar -xzf dotnet8.tar.gz -C /usr/share/dotnet
       - export DOTNET_ROOT=/usr/share/dotnet
-      - export PATH=$PATH:/usr/share/dotnet:$PATH
+      - export PATH=$DOTNET_ROOT:$HOME/.dotnet/tools:$PATH
       - dotnet --version
       - echo "Installing Lambda Tools"
       - dotnet tool install -g Amazon.Lambda.Tools
