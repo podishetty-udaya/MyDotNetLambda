@@ -19,6 +19,9 @@ phases:
       - tar -xzf dotnet8.tar.gz -C /usr/share/dotnet
       - export DOTNET_ROOT=/usr/share/dotnet
       - export PATH=$DOTNET_ROOT:$PATH:$HOME/.dotnet/tools
+      - export DOTNET_ROLL_FORWARD=LatestMajor
+      - echo "Checking for any global.json files"
+      - find /codebuild -name global.json
       - dotnet --version
       - echo "Installing Lambda Tools"
       - dotnet tool install -g Amazon.Lambda.Tools
