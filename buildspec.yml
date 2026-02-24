@@ -10,14 +10,20 @@ env:
 phases:
   install:
     runtime-versions:
-      dotnet: 8
+      dotnet: 6
     commands:
-      - echo Installing .NET Lambda tools
+      - echo "Installing .NET 8 SDK manually"
+      # Download the .NET 8 SDK (Linux x64 tar.gz)
+      - wget https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-8.0.408-linux-x64-binaries -O dotnet8.tar.gz
+      - mkdir -p /usr/share/dotnet
+      - tar -xzf dotnet8.tar.gz -C /usr/share/dotnet
+      - export DOTNET_ROOT=/usr/share/dotnet
+      - export PATH=$PATH:/usr/share/dotnet:$PATH
+      - dotnet --version
+      - echo "Installing Lambda Tools"
       - dotnet tool install -g Amazon.Lambda.Tools
-      - echo Installing jq for JSON parsing
-      - apt-get update && apt-get install -y jq || true
-      - echo Verifying AWS CLI
-      - aws sts get-caller-identity
+      - export PATH=$PATH:$HOME/.dotnet/tools
+      - dotnet lambda --version
 
   pre_build:
     commands:
