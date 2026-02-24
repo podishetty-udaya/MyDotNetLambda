@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>MyLambdaProject</AssemblyName>
+    <RootNamespace>MyLambdaProject</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- AWS Lambda Core -->
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
+    <!-- Optional JSON serializer -->
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,47 @@
+version: 0.2
+
+env:
+  variables:
+    LAMBDA_FUNCTION_NAME: MyDotNetLambda
+    ARTIFACT_BUCKET: my-dotnet-lambda-artifacts
+    AWS_REGION: us-east-1
+    ASSUME_ROLE_ARN: arn:aws:iam::<ACCOUNT_ID>:role/CodeBuildDeployRole
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 8
+    commands:
+      - echo Installing .NET Lambda tools
+      - dotnet tool install -g Amazon.Lambda.Tools
+      - echo Installing jq for JSON parsing
+      - apt-get update && apt-get install -y jq || true
+      - echo Verifying AWS CLI
+      - aws sts get-caller-identity
+
+  pre_build:
+    commands:
+      - echo "Assuming role via STS"
+      - CREDS_JSON=$(aws sts assume-role --role-arn $ASSUME_ROLE_ARN --role-session-name CodeBuildSession)
+      - export AWS_ACCESS_KEY_ID=$(echo $CREDS_JSON | jq -r '.Credentials.AccessKeyId')
+      - export AWS_SECRET_ACCESS_KEY=$(echo $CREDS_JSON | jq -r '.Credentials.SecretAccessKey')
+      - export AWS_SESSION_TOKEN=$(echo $CREDS_JSON | jq -r '.Credentials.SessionToken')
+      - echo "Temporary STS credentials:"
+      - echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+      - echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+      - echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN"
+      - aws sts get-caller-identity
+
+  build:
+    commands:
+      - echo "Building .NET Lambda project"
+      - dotnet build src/MyLambdaProject/MyLambdaProject.csproj -c Release
+      - echo "Packaging Lambda"
+      - dotnet lambda package -c Release -o MyLambda.zip
+
+  post_build:
+    commands:
+      - echo "Uploading Lambda zip to S3"
+      - aws s3 cp MyLambda.zip s3://$ARTIFACT_BUCKET/MyLambda.zip
+      - echo "Deploying Lambda function"
+      - aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --s3-bucket $ARTIFACT_BUCKET --s3-key MyLambda.zip

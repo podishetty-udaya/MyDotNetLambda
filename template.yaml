@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Simple .NET Lambda Example
+
+Resources:
+  MyLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: MyDotNetLambda
+      Handler: MyLambdaProject::MyLambdaProject.Function::Handler
+      Runtime: dotnet8
+      MemorySize: 128
+      Timeout: 10
+      CodeUri: src/MyLambdaProject/
+      Policies:
+        - AWSLambdaBasicExecutionRole
