@@ -27,7 +27,7 @@ phases:
       - echo "Installing Lambda Tools"
       - dotnet tool install -g Amazon.Lambda.Tools
       - export PATH=$PATH:$HOME/.dotnet/tools
-      - dotnet lambda --version
+      - dotnet --version
 
   pre_build:
     commands:
