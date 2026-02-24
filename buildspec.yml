@@ -10,12 +10,15 @@ env:
 phases:
   install:
     commands:
+      - echo "Updating system packages and installing dependencies"
+      - apt-get update -y
+      - apt-get install -y libicu66 libssl3 libkrb5-3 libunwind8 zlib1g wget
       - echo "Installing .NET 8 SDK manually"
       - wget https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.418/dotnet-sdk-8.0.418-linux-x64.tar.gz -O dotnet8.tar.gz
       - mkdir -p /usr/share/dotnet
       - tar -xzf dotnet8.tar.gz -C /usr/share/dotnet
       - export DOTNET_ROOT=/usr/share/dotnet
-      - export PATH=$DOTNET_ROOT:$HOME/.dotnet/tools:$PATH
+      - export PATH=$DOTNET_ROOT:$PATH:$HOME/.dotnet/tools
       - dotnet --version
       - echo "Installing Lambda Tools"
       - dotnet tool install -g Amazon.Lambda.Tools
