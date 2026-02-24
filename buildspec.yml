@@ -22,6 +22,7 @@ phases:
       - export DOTNET_ROLL_FORWARD=LatestMajor
       - echo "Checking for any global.json files"
       - find /codebuild -name global.json
+      - rm -f global.json
       - dotnet --version
       - echo "Installing Lambda Tools"
       - dotnet tool install -g Amazon.Lambda.Tools
