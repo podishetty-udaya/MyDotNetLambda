@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     LAMBDA_FUNCTION_NAME: MyDotNetLambda
-    ARTIFACT_BUCKET: my-dotnet-lambda-artifacts
+    ARTIFACT_BUCKET: my-dotnet-lambda-artifactss
     AWS_REGION: us-east-1
     ASSUME_ROLE_ARN: arn:aws:iam::758742552347:role/CodeBuildDeployRole
 
