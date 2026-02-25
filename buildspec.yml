@@ -43,11 +43,14 @@ phases:
       - aws sts get-caller-identity
 
   build:
-    commands:
+    commands:    
+      - echo "Moving into Lambda project directory"
+      - cd src/MyLambdaProject
       - echo "Building .NET Lambda project"
-      - dotnet build MyLambdaProject/MyLambdaProject.csproj -c Release
-      - echo "Packaging Lambda"
-      - dotnet lambda package MyLambdaProject/MyLambdaProject.csproj -c Release -o MyLambda.zip
+      - dotnet build -c Release
+      - echo "Packaging Lambda into zip"
+      - dotnet lambda package -c Release -o ../../MyLambda.zip
+      - cd ../../
 
   post_build:
     commands:
