@@ -54,7 +54,13 @@ phases:
 
   post_build:
     commands:
-      - echo "Uploading Lambda zip to S3"
-      - aws s3 cp MyLambda.zip s3://$ARTIFACT_BUCKET/MyLambda.zip
-      - echo "Deploying Lambda function"
-      - aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --s3-bucket $ARTIFACT_BUCKET --s3-key MyLambda.zip
+      - echo "Uploading Lambda zip to custom S3 bucket using STS"
+      - aws s3 cp MyLambda.zip s3://$ARTIFACT_BUCKET/MyLambda.zip \
+          --region $AWS_REGION \
+          --sse aws:kms
+      - echo "Updating Lambda function using STS credentials"
+      - aws lambda update-function-code \
+          --function-name $LAMBDA_FUNCTION_NAME \
+          --s3-bucket $ARTIFACT_BUCKET \
+          --s3-key MyLambda.zip \
+          --region $AWS_REGION
