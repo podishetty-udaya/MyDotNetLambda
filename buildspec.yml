@@ -47,7 +47,7 @@ phases:
       - echo "Building .NET Lambda project"
       - dotnet build src/MyLambdaProject/MyLambdaProject.csproj -c Release
       - echo "Packaging Lambda"
-      - dotnet lambda package -c Release -o MyLambda.zip
+      - dotnet lambda package  src/MyLambdaProject/MyLambdaProject.csproj -c Release -o MyLambda.zip
 
   post_build:
     commands:
