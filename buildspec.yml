@@ -51,6 +51,9 @@ phases:
       - echo "Packaging Lambda into zip"
       - dotnet lambda package -c Release -o ../../MyLambda.zip
       - cd ../../
+      - echo "Preparing CloudFormation template output"
+      - mkdir -p BuildOutput
+      - cp template.yaml BuildOutput/template.yaml   # <-- ensure template is here
 
   post_build:
     commands:
