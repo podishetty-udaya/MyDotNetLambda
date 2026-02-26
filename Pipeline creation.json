@@ -1,0 +1,202 @@
+
+aws codepipeline get-pipeline --name MyDotNetLambdaPipeline-v2 
+
+$ aws codepipeline get-pipeline --name MyDotNetLambdaPipeline-v2
+{
+    "pipeline": {
+        "name": "MyDotNetLambdaPipeline-v2",
+        "roleArn": "arn:aws:iam::758742552347:role/service-role/AWSCodePipelineServiceRole-us-east-1-MyDotNetLambdaPipeline",
+        "artifactStore": {
+            "type": "S3",
+            "location": "my-dotnet-lambda-artifactss"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "CodeStarSourceConnection",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BranchName": "main",
+                            "ConnectionArn": "arn:aws:codeconnections:us-east-1:758742552347:connection/b8ddbdb8-5f49-4970-b50e-db8b7be5c7ef",
+                            "DetectChanges": "true",
+                            "FullRepositoryId": "podishetty-udaya/MyDotNetLambda",
+                            "OutputArtifactFormat": "CODE_ZIP"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "us-east-1",
+                        "namespace": "SourceVariables"
+                    }
+                ],
+                "onFailure": {
+                    "result": "RETRY",
+                    "retryConfiguration": {
+                        "retryMode": "ALL_ACTIONS"
+                    }
+                }
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "Build",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "MyDotNetLambdaBuild"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "BuildArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "us-east-1",
+                        "namespace": "BuildVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Deploy",
+                "actions": [
+                    {
+                        "name": "Deploy",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CREATE_UPDATE",
+                            "Capabilities": "CAPABILITY_IAM",
+                            "RoleArn": "arn:aws:iam::758742552347:role/CloudFormationExecutionRole-MyLambda",
+                            "StackName": "MyDotNetLambdaStack",
+                            "TemplatePath": "BuildArtifact::BuildOutput"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "BuildArtifact"
+                            }
+                        ],
+                        "region": "us-east-1",
+                        "namespace": "DeployVariables"
+                    }
+                ]
+            }
+        ],
+        "version": 1,
+        "executionMode": "QUEUED",
+        "pipelineType": "V2",
+        "triggers": [
+            {
+                "providerType": "CodeStarSourceConnection",
+                "gitConfiguration": {
+                    "sourceActionName": "Source",
+                    "push": [
+                        {
+                            "branches": {
+                                "includes": [
+                                    "main"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "metadata": {
+        "pipelineArn": "arn:aws:codepipeline:us-east-1:758742552347:MyDotNetLambdaPipeline-v2",
+        "created": "2026-02-25T01:58:09.492000-08:00",
+        "updated": "2026-02-25T01:58:09.492000-08:00"
+    }
+}
+
+
+
+
+aws codebuild batch-get-projects --names MyDotNetLambdaBuild
+
+$ aws codebuild batch-get-projects --names MyDotNetLambdaBuild
+{
+    "projects": [
+        {
+            "name": "MyDotNetLambdaBuild",
+            "arn": "arn:aws:codebuild:us-east-1:758742552347:project/MyDotNetLambdaBuild",
+            "source": {
+                "type": "GITHUB",
+                "location": "https://github.com/podishetty-udaya/MyDotNetLambda.git",
+                "gitCloneDepth": 1,
+                "gitSubmodulesConfig": {
+                    "fetchSubmodules": false
+                },
+                "buildspec": "buildspec.yml",
+                "reportBuildStatus": false,
+                "insecureSsl": false
+            },
+            "secondarySources": [],
+            "secondarySourceVersions": [],
+            "artifacts": {
+                "type": "NO_ARTIFACTS"
+            },
+            "secondaryArtifacts": [],
+            "cache": {
+                "type": "NO_CACHE"
+            },
+            "environment": {
+                "type": "LINUX_CONTAINER",
+                "image": "aws/codebuild/standard:7.0",
+                "computeType": "BUILD_GENERAL1_SMALL",
+                "environmentVariables": [],
+                "privilegedMode": false,
+                "imagePullCredentialsType": "CODEBUILD"
+            },
+            "serviceRole": "arn:aws:iam::758742552347:role/CodeBuildDeployRole",
+            "timeoutInMinutes": 60,
+            "queuedTimeoutInMinutes": 480,
+            "encryptionKey": "arn:aws:kms:us-east-1:758742552347:alias/aws/s3",
+            "tags": [],
+            "created": "2026-02-23T22:53:24.212000-08:00",
+            "lastModified": "2026-02-23T22:53:24.212000-08:00",
+            "badge": {
+                "badgeEnabled": false
+            },
+            "logsConfig": {
+                "cloudWatchLogs": {
+                    "status": "ENABLED"
+                },
+                "s3Logs": {
+                    "status": "DISABLED",
+                    "encryptionDisabled": false
+                }
+            },
+            "projectVisibility": "PRIVATE"
+        }
+    ],
+    "projectsNotFound": []
+}
+
